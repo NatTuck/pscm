@@ -1,13 +1,18 @@
 
+CC := gcc
+CFLAGS := -I./include
 
-build/gen/tokens.h build/gen/tokens.c: src/gen-tokenizer.rb
-	echo ruby src/tokens/gen.rb $@
+HDRS := $(wildcard include/*.h)
+SRCS := $(wildcard src/*.c)
+OBJS := $(shell echo "$(SRCS)" | perl -lpe "s/\bsrc/build/g; s/.c\b/.o/g")
 
+build/pscm: $(OBJS)
+	gcc -o build/pscm $(OBJS)
 
+build/%.o: src/%.c $(HDRS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 clean:
 	rm -rf build
-	mkdir build/gen
-	touch build/gen/.keep
-	mkdir build/bin
-	touch build/bin/.keep
+	mkdir build
+	touch build/.keep
