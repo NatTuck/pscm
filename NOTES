@@ -1,0 +1,24 @@
+
+== Memory Management ==
+
+= Refcount =
+
+* Alloc with malloc, free with free.
+* Every object has a refcount field.
+* This field is first, so we can access
+  it through a generic struct.
+* We can allocate objects and increment
+  their refcount knowing only their size.
+* To deallocate objects, each needs its
+  own "destroy" function in order to
+  handle recursive deallocation.
+
+= GC =
+
+* Alloc with malloc, free never.
+* Can leave out basically everything
+  that's specific to refcounting.
+* Need to watch for non-trivial destroy
+  functions in case we need finalizers.
+
+
