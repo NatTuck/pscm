@@ -22,7 +22,7 @@
 /* Use refcounts for memory management */
 #include <stdlib.h>
 
-#define pscm_alloc pscm_alloc_rc(x)
+#define pscm_alloc(x) pscm_alloc_rc(x)
 #define pscm_malloc(x) malloc(x)
 #define pscm_free(x) free(x)
 

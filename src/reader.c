@@ -23,4 +23,24 @@ source_from_path(const char* path)
     return code;
 }
 
+ps_token*
+next_token(ps_source* code)
+{
+    ps_token* tok = ALLOC(ps_token);
+    tok->source = code;
+
+
+    while (isspace)
+    
+            
+            char* text = code->text + code->pos;
+
+
+    if (text[0] == '(') {
+        tok->
+    }
+
+
+    return tok;
+}
 
