@@ -1,5 +1,5 @@
 
-#include <string.h>
+#include <bsd/string.h>
 #include <ctype.h>
 
 #include "mem.h"
@@ -64,7 +64,7 @@ read_number(const char* text)
     }
 
     char* tt = pscm_malloc(size + 1);
-    strncpy(tt, text, size);
+    strlcpy(tt, text, size + 1);
     return tt;
 }
 
@@ -78,7 +78,7 @@ read_name(const char* text)
     }
     
     char* tt = pscm_malloc(size + 1);
-    strncpy(tt, text, size);
+    strlcpy(tt, text, size + 1);
     return tt;
 }
 
@@ -182,7 +182,7 @@ void
 release_token(ps_token* tok)
 {
     if (pscm_release(tok)) {
-        pscm_release(tok->source);
+        release_source(tok->source);
         pscm_free(tok->text);
         pscm_free(tok);
     }

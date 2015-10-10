@@ -6,6 +6,9 @@
  * pscm_malloc - Allocate a chunk of bytes that will be freed.
  */
 
+#include <stdint.h>
+#include <stdlib.h>
+
 #ifdef USE_GC
 
 /* Use libgc for memory management */
