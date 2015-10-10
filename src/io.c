@@ -16,6 +16,17 @@ assert_perror(int cond, const char* text)
     exit(1);
 }
 
+void
+hard_assert(int cond, const char* text)
+{
+    if (cond) {
+        return;
+    }
+
+    fprintf(stderr, "%s: failed hard_assert\n", text);
+    exit(2);
+}
+
 char*
 read_whole_file(const char* path)
 {

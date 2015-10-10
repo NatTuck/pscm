@@ -11,6 +11,7 @@ typedef struct ps_source {
 } ps_source;
 
 typedef enum tok_type {
+    BAD_TOK,
     NAME_TOK,
     STRING_TOK,
     NUMBER_TOK,
@@ -26,12 +27,18 @@ typedef enum tok_type {
 typedef struct ps_token {
     PSCM_REFCOUNT
     ps_source* source;
+    int        s_pos;
     tok_type   type;
     char*      text;
 } ps_token;
 
-ps_source* open_string(const char* text);
-ps_source* open_source(const char* path);
-ps_token* next_token(ps_source*);
+ps_source* source_from_string(const char* text);
+ps_source* source_from_path(const char* path);
+void retain_source(ps_source* code);
+void release_source(ps_source* code);
+
+ps_token*  next_token(ps_source* code);
+void retain_token(ps_token* tok);
+void release_token(ps_token* tok);
 
 #endif

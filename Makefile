@@ -1,6 +1,6 @@
 
 CC := gcc
-CFLAGS := -I./include
+CFLAGS := -g -std=gnu99 -Wall -I./include
 
 HDRS := $(wildcard include/*.h)
 SRCS := $(wildcard src/*.c)
@@ -9,7 +9,7 @@ OBJS := $(shell echo "$(SRCS)" | perl -lpe "s/\bsrc/build/g; s/.c\b/.o/g")
 build/pscm: $(OBJS)
 	gcc -o build/pscm $(OBJS)
 
-build/%.o: src/%.c $(HDRS)
+build/%.o: src/%.c $(HDRS) Makefile
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 clean:
