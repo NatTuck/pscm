@@ -1,10 +1,11 @@
 #ifndef PSCM_READER_H
 #define PSCM_READER_H
 
-#include "mem.h"
+#include "mem.hh"
+#include "vals.hh"
 
 typedef struct ps_source {
-    PSCM_REFCOUNT
+    ps_val val;
     char* path;
     char* text;
     int   pos;
@@ -25,7 +26,7 @@ typedef enum tok_type {
 } tok_type;
 
 typedef struct ps_token {
-    PSCM_REFCOUNT
+    ps_val val;
     ps_source* source;
     int        s_pos;
     tok_type   type;
@@ -34,11 +35,7 @@ typedef struct ps_token {
 
 ps_source* source_from_string(const char* text);
 ps_source* source_from_path(const char* path);
-void retain_source(ps_source* code);
-void release_source(ps_source* code);
 
 ps_token*  next_token(ps_source* code);
-void retain_token(ps_token* tok);
-void release_token(ps_token* tok);
 
 #endif

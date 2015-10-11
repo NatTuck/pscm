@@ -2,19 +2,19 @@
 GCMODE := -DUSE_GC
 GCLIBS := -lgc
 
-CC := gcc
-CFLAGS := -g -std=gnu99 -Wall -I./include $(GCMODE)
+CXX := g++ -std=gnu++11
+CFLAGS := -g -Wall -I./include $(GCMODE)
 LIBS := -lbsd $(GCLIBS)
 
-HDRS := $(wildcard include/*.h)
-SRCS := $(wildcard src/*.c)
-OBJS := $(shell echo "$(SRCS)" | perl -lpe "s/\bsrc/build/g; s/.c\b/.o/g")
+HDRS := $(wildcard include/*.hh)
+SRCS := $(wildcard src/*.cc)
+OBJS := $(shell echo "$(SRCS)" | perl -lpe "s/\bsrc/build/g; s/.cc\b/.o/g")
 
 build/pscm: $(OBJS)
-	gcc -o build/pscm $(OBJS) $(LIBS)
+	$(CXX) -o build/pscm $(OBJS) $(LIBS)
 
-build/%.o: src/%.c $(HDRS) Makefile
-	$(CC) -c -o $@ $< $(CFLAGS)
+build/%.o: src/%.cc $(HDRS) Makefile
+	$(CXX) -c -o $@ $< $(CFLAGS)
 
 clean:
 	rm -rf build

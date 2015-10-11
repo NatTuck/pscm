@@ -2,14 +2,14 @@
 #include <bsd/string.h>
 #include <ctype.h>
 
-#include "mem.h"
-#include "reader.h"
-#include "io.h"
+#include "mem.hh"
+#include "reader.hh"
+#include "io.hh"
 
 ps_source*
 source_from_string(const char* text)
 {
-    ps_source* code = ALLOC(ps_source);
+    ps_source* code = pscm_alloc<ps_source>();
     code->path = pscm_strdup("[string]");
     code->text = pscm_strdup(text);
     return code;
@@ -18,26 +18,10 @@ source_from_string(const char* text)
 ps_source*
 source_from_path(const char* path)
 {
-    ps_source* code = ALLOC(ps_source);
+    ps_source* code = pscm_alloc<ps_source>();
     code->path = pscm_strdup(path);
     code->text = read_whole_file(path);
     return code;
-}
-
-void
-retain_source(ps_source* code)
-{
-    pscm_retain(code);
-}
-
-void
-release_source(ps_source* code)
-{
-    if (pscm_release(code)) {
-        pscm_free(code->path);
-        pscm_free(code->text);
-        pscm_free(code);
-    }
 }
 
 static
@@ -63,7 +47,7 @@ read_number(const char* text)
         size += 1;
     }
 
-    char* tt = pscm_malloc(size + 1);
+    char* tt = (char*) pscm_malloc(size + 1);
     strlcpy(tt, text, size + 1);
     return tt;
 }
@@ -77,7 +61,7 @@ read_name(const char* text)
         size += 1;
     }
     
-    char* tt = pscm_malloc(size + 1);
+    char* tt = (char*) pscm_malloc(size + 1);
     strlcpy(tt, text, size + 1);
     return tt;
 }
@@ -87,7 +71,7 @@ char*
 read_string(const char* text)
 {
     int nn = strlen(text);
-    char* tmp = pscm_malloc(nn + 1);
+    char* tmp = (char*) pscm_malloc(nn + 1);
     memset(tmp, 0, nn + 1);
 
     tmp[0] = '"';
@@ -131,11 +115,11 @@ next_token(ps_source* code)
         return 0;
     }
 
-    ps_token* tok = ALLOC(ps_token);
+    ps_token* tok = pscm_alloc<ps_token>();
     tok->type   = BAD_TOK;
     tok->source = code;
     tok->s_pos  = code->pos;
-    retain_source(code);
+    pscm_retain(code);
 
     if (text[0] == '(') {
         tok->type = LPAREN_TOK;
@@ -170,22 +154,6 @@ next_token(ps_source* code)
 
     code->pos += strlen(tok->text);
     return tok;
-}
-
-void
-retain_token(ps_token* tok)
-{
-    pscm_retain(tok);
-}
-
-void
-release_token(ps_token* tok)
-{
-    if (pscm_release(tok)) {
-        release_source(tok->source);
-        pscm_free(tok->text);
-        pscm_free(tok);
-    }
 }
 
 

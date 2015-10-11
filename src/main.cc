@@ -2,7 +2,7 @@
 #include <alloca.h>
 #include <stdio.h>
 
-#include "reader.h"
+#include "reader.hh"
 
 void
 test_tokenize(const char* text)
@@ -12,17 +12,17 @@ test_tokenize(const char* text)
 
     while ((tok = next_token(code))) {
         printf("Token: [%s]\n", tok->text);
-        release_token(tok);
+        pscm_release(tok);
     }
 
     printf("done\n");
-    release_source(code);
+    pscm_release(code);
 }
 
 int
 main(int argc, char* argv[])
 {
-    char* line = alloca(100);
+    char* line = (char*) alloca(100);
 
     while(1) {
         char* rv = fgets(line, 100, stdin);
