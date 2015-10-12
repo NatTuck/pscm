@@ -111,17 +111,25 @@ make_#{type_name}(#{attrs.join(", ")})
   end
 
   def clean_impl
-    <<-END
+    code = <<-END
 void
 cleanup_#{type_name}(ps_v* xx)
 {
 #ifdef REFCOUNT
     #{type_name}* vv = (#{type_name}*) xx;
     #{clean_body}
+    END
+
+    @psv_attrs.each do |pv|
+      code += %Q{    pscm_release(vv->#{pv});\n}
+    end
+
+    code += <<-END
     free(vv);
 #endif
 }
     END
+    code
   end
 
   def clean_body
