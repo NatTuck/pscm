@@ -2,21 +2,22 @@
 #include <alloca.h>
 #include <stdio.h>
 
-#include "reader.hh"
+#include "mem.h"
+#include "tokenize.h"
 
 void
 test_tokenize(const char* text)
 {
-    ps_source* code = source_from_string(text);
+    ps_source* code = source_from_string("[string]", text);
     ps_token* tok;
 
     while ((tok = next_token(code))) {
         printf("Token: [%s]\n", tok->text);
-        pscm_release(tok);
+        release_token(tok);
     }
 
     printf("done\n");
-    pscm_release(code);
+    release_source(code);
 }
 
 int

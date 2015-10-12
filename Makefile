@@ -1,22 +1,44 @@
 
-GCMODE := -DUSE_GC
-GCLIBS := -lgc
+#GCMODE := 
+#GCLIBS := -lgc
 
-CXX := g++ -std=gnu++11
+GCMODE := -DREFCOUNT
+GCLIBS := 
+
+CC := gcc -std=gnu11
 CFLAGS := -g -Wall -I./include $(GCMODE)
 LIBS := -lbsd $(GCLIBS)
 
-HDRS := $(wildcard include/*.hh)
-SRCS := $(wildcard src/*.cc)
-OBJS := $(shell echo "$(SRCS)" | perl -lpe "s/\bsrc/build/g; s/.cc\b/.o/g")
+HDRS := $(wildcard include/*.h)
+SRCS := $(wildcard src/*.c)
+OBJS := $(shell echo "$(SRCS)" | perl -lpe "s/\bsrc/build/g; s/.c\b/.o/g")
 
-build/pscm: $(OBJS)
-	$(CXX) -o build/pscm $(OBJS) $(LIBS)
+build/pscm: $(OBJS) build/gen-types.o
+	$(CC) -o build/pscm $(OBJS) build/gen-types.o $(LIBS)
 
-build/%.o: src/%.cc $(HDRS) Makefile
-	$(CXX) -c -o $@ $< $(CFLAGS)
+build/%.o: src/%.c build/hdrs
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+build/hdrs: $(HDRS) types Makefile
+	touch build/hdrs
+
+build/gen-types.o: types
+	$(CC) -c -o $@ src/gen/types.c $(CFLAGS)
+
+types: $(wildcard scripts/types/*.rb scripts/*.rb)
+	(cd scripts && ruby ./gen-types.rb)
 
 clean:
+	rm -rf include/gen
+	mkdir include/gen
+	touch include/gen/.keep
+	#
+	rm -rf src/gen
+	mkdir src/gen
+	touch src/gen/.keep
+	#
 	rm -rf build
 	mkdir build
 	touch build/.keep
+
+.PHONY: clean types

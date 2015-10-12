@@ -1,0 +1,19 @@
+
+Here are the basic types:
+    SYMBOL
+    STRING
+    INT
+    FLOAT
+
+Here are the compound types
+needed so far:
+    CONS (v, v)
+    SOURCE (string, string)
+    TOKEN (source, int, enum, string)
+
+Standard "methods":
+    make_x
+    cleanup
+    type_name
+
+

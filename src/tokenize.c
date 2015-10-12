@@ -2,26 +2,39 @@
 #include <bsd/string.h>
 #include <ctype.h>
 
-#include "mem.hh"
-#include "reader.hh"
-#include "io.hh"
+#include "tokenize.h"
+#include "io.h"
+#include "mem.h"
 
 ps_source*
-source_from_string(const char* text)
+source_from_string(const char* path, const char* text)
 {
-    ps_source* code = pscm_alloc<ps_source>();
-    code->path = pscm_strdup("[string]");
-    code->text = pscm_strdup(text);
+    ps_source* code = calloc(1, sizeof(ps_source));
+    code->refs = 1;
+    code->path = strdup(path);
+    code->text = strdup(text);
     return code;
 }
 
 ps_source*
 source_from_path(const char* path)
 {
-    ps_source* code = pscm_alloc<ps_source>();
-    code->path = pscm_strdup(path);
+    ps_source* code = calloc(1, sizeof(ps_source));
+    code->refs = 1;
+    code->path = strdup(path);
     code->text = read_whole_file(path);
     return code;
+}
+
+void
+release_source(ps_source* code)
+{
+    code->refs -= 1;
+    if (code->refs == 0) {
+        free(code->path);
+        free(code->text);
+        free(code);
+    }
 }
 
 static
@@ -115,11 +128,11 @@ next_token(ps_source* code)
         return 0;
     }
 
-    ps_token* tok = pscm_alloc<ps_token>();
+    ps_token* tok = (ps_token*) calloc(1, sizeof(ps_token));
     tok->type   = BAD_TOK;
     tok->source = code;
-    tok->s_pos  = code->pos;
-    pscm_retain(code);
+    tok->offset = code->pos;
+    code->refs += 1;
 
     if (text[0] == '(') {
         tok->type = LPAREN_TOK;
@@ -156,4 +169,10 @@ next_token(ps_source* code)
     return tok;
 }
 
-
+void
+release_token(ps_token* tok)
+{
+    release_source(tok->source);
+    free(tok->text);
+    free(tok);
+}

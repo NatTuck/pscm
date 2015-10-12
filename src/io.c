@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "mem.hh"
+#include "mem.h"
 
 void
 assert_perror(int cond, const char* text)
@@ -38,7 +38,7 @@ read_whole_file(const char* path)
     rv = stat(path, &info);
     assert_perror(rv == 0, "stat");
 
-    char* buff = (char*) pscm_malloc(info.st_size);
+    char* buff = (char*) calloc(1, info.st_size);
     FILE* ff = fopen(path, "r");
     assert_perror(ff != 0, "fopen");
 

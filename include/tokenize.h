@@ -1,17 +1,16 @@
-#ifndef PSCM_READER_H
-#define PSCM_READER_H
+#ifndef PSCM_TOKENIZE_H
+#define PSCM_TOKENIZE_H
 
-#include "mem.hh"
-#include "vals.hh"
+#include <stdint.h>
 
 typedef struct ps_source {
-    ps_val val;
-    char* path;
-    char* text;
-    int   pos;
+    int64_t refs;
+    char*   path;
+    char*   text;
+    int64_t pos;
 } ps_source;
 
-typedef enum tok_type {
+typedef enum token_type {
     BAD_TOK,
     NAME_TOK,
     STRING_TOK,
@@ -23,19 +22,21 @@ typedef enum tok_type {
     RCURLY_TOK,
     LCURLY_TOK,
     QUOTE_TOK
-} tok_type;
+} token_type;
 
 typedef struct ps_token {
-    ps_val val;
     ps_source* source;
-    int        s_pos;
-    tok_type   type;
+    int64_t    offset;
     char*      text;
+    token_type type;
 } ps_token;
 
-ps_source* source_from_string(const char* text);
+ps_source* source_from_string(const char* path, const char* text);
 ps_source* source_from_path(const char* path);
+void release_source(ps_source*);
 
 ps_token*  next_token(ps_source* code);
+void release_token(ps_token*);
+
 
 #endif
