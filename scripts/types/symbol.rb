@@ -6,4 +6,16 @@ class SymbolV < VV
     super
     @attrs << "char* text"
   end
+
+  def make_body
+    "vv->text = pscm_strdup(text);"
+  end
+  
+  def clean_body
+    "pscm_free(vv->text);"
+  end
+
+  def show_body
+    "ss = pscm_strdup(vv->text);"
+  end
 end

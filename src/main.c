@@ -2,27 +2,16 @@
 #include <alloca.h>
 #include <stdio.h>
 
-#include "mem.h"
 #include "tokenize.h"
-
-void
-test_tokenize(const char* text)
-{
-    ps_source* code = source_from_string("[string]", text);
-    ps_token* tok;
-
-    while ((tok = next_token(code))) {
-        printf("Token: [%s]\n", tok->text);
-        release_token(tok);
-    }
-
-    printf("done\n");
-    release_source(code);
-}
+#include "parse.h"
+#include "mem.h"
+#include "types.h"
 
 int
 main(int argc, char* argv[])
 {
+    pscm_init_types();
+
     char* line = (char*) alloca(100);
 
     while(1) {
@@ -31,7 +20,15 @@ main(int argc, char* argv[])
             break;
         }
 
-        test_tokenize(line);
+        ps_source* code = source_from_string("[test]", line);
+        ps_v* vv = parse(code);
+        release_source(code);
+
+        char* text = pscm_show(vv);
+        printf("got:\n%s\n", text);
+        free(text);
+
+        pscm_release(vv);
     }
 
     return 0;

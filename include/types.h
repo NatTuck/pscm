@@ -7,7 +7,8 @@ typedef struct ps_type {
     const char* name;
     void (*cleanup)(struct ps_v*);
     struct ps_v* (*clone)(struct ps_v*);
-    void (*to_s)(struct ps_v*);
+    char* (*show)(struct ps_v*);
+
 } ps_type;
 
 #include "gen/types.h"

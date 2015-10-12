@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 #include "mem.h"
 
@@ -51,3 +52,21 @@ read_whole_file(const char* path)
     return buff;
 }
 
+char*
+pscm_sprintf(const char* fmt, ...)
+{
+    va_list as1;
+    va_list as2;
+
+    va_start(as1, fmt);
+    va_copy(as2, as1);
+
+    int nn = vsnprintf(0, 0, fmt, as1);
+    char* ss = pscm_malloc(nn + 1);
+    vsnprintf(ss, nn + 1, fmt, as2);
+
+    va_end(as2);
+    va_end(as1);
+
+    return ss;
+}

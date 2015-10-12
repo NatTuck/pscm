@@ -6,4 +6,5 @@ void hard_assert(int, const char*);
 
 char* read_whole_file(const char*);
 
+char* pscm_sprintf(const char* fmt, ...);
 #endif

@@ -21,6 +21,8 @@ class VV
     <<-"END"
     #{type_type_name}.name    = "#{type_name}";
     #{type_type_name}.cleanup = cleanup_#{type_name};
+    #{type_type_name}.clone   = clone_#{type_name};
+    #{type_type_name}.show    = show_#{type_name};
     END
   end
 
@@ -29,6 +31,7 @@ class VV
     xs << make_proto
     xs << clean_proto
     xs << clone_proto
+    xs << show_proto
     xs << ''
     xs.join("\n")
   end
@@ -38,6 +41,7 @@ class VV
     xs << make_impl
     xs << clean_impl
     xs << clone_impl
+    xs << show_impl
     xs << ''
     xs.join("\n")
   end
@@ -82,6 +86,7 @@ make_#{type_name}(#{attrs.join(", ")})
 #else
     #{type_name}* vv = GC_malloc(sizeof(#{type_name}));
 #endif
+    vv->type = &#{type_type_name};
     END
 
     @psv_attrs.each do |vv|
@@ -142,6 +147,28 @@ clone_#{type_name}(ps_v* vv)
   end
 
   def clone_body
+    ""
+  end
+
+  def show_proto
+    "char* show_#{type_name}(ps_v*);"
+  end
+
+  def show_impl
+    <<-END
+char*
+show_#{type_name}(ps_v* xx)
+{
+    #{type_name}* vv = (#{type_name}*) xx;
+    char* ss = 0;
+    #{show_body}
+    hard_assert(ss != 0 && vv != 0, "don't know how to print this");
+    return ss;
+}
+    END
+  end
+
+  def show_body
     ""
   end
 

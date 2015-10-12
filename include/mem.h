@@ -68,4 +68,11 @@ pscm_clone(ps_v* vv)
     return vv->type->clone(vv);
 }
 
+inline static
+char*
+pscm_show(ps_v* vv)
+{
+    return vv->type->show(vv);
+}
+
 #endif

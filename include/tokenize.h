@@ -11,6 +11,7 @@ typedef struct ps_source {
 } ps_source;
 
 typedef enum token_type {
+    NULL_TOK,
     BAD_TOK,
     NAME_TOK,
     STRING_TOK,

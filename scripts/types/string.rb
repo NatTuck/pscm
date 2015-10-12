@@ -14,4 +14,8 @@ class StringV < VV
   def clean_body
     "pscm_free(vv->text);"
   end
+  
+  def show_body
+    "ss = pscm_strdup(vv->text);"
+  end
 end

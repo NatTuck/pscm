@@ -20,6 +20,7 @@ cc.puts <<-END
 #include <gc/gc.h>
 #endif
 
+#include "io.h"
 #include "types.h"
 #include "mem.h"
 END
