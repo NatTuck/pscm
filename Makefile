@@ -2,7 +2,7 @@
 #GCMODE := 
 #GCLIBS := -lgc
 
-GCMODE := -DREFCOUNT
+GCMODE := -DREFCOUNT=1
 GCLIBS := 
 
 CC := gcc -std=gnu11

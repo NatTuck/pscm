@@ -27,11 +27,6 @@ parse_seq(ps_source* code, token_type term)
     ps_v* rseq;
 
     while ((tok = next_token(code))) {
-        if (tok->type == term) {
-            release_token(tok);
-            return seq;
-        }
-
         ps_v* vv;
 
         switch (tok->type) {
