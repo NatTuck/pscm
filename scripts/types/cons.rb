@@ -17,4 +17,8 @@ class ConsV < VV
       pscm_free(aa);
     END
   end
+
+  def clean_body
+    ""
+  end
 end

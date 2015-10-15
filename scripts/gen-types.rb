@@ -15,6 +15,7 @@ cc = File.open("../src/gen/types.c", "w")
 
 cc.puts <<-END
 #include <stdlib.h>
+#include <stdio.h>
 
 #ifndef REFCOUNT
 #include <gc/gc.h>

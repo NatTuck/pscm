@@ -80,6 +80,8 @@ class VV
 ps_v*
 make_#{type_name}(#{attrs.join(", ")})
 {
+    fprintf(stderr, "make #{type_name}\\n");
+
 #ifdef REFCOUNT
     #{type_name}* vv = calloc(1, sizeof(#{type_name}));
     vv->refs = 1;
@@ -90,6 +92,7 @@ make_#{type_name}(#{attrs.join(", ")})
     END
 
     @psv_attrs.each do |vv|
+      raise Exception.new("clone here is a problem")
       code << "    vv->#{vv} = pscm_clone(#{vv});\n"
     end
 
@@ -115,6 +118,8 @@ make_#{type_name}(#{attrs.join(", ")})
 void
 cleanup_#{type_name}(ps_v* xx)
 {
+    fprintf(stderr, "cleanup #{type_name}\\n");
+
 #ifdef REFCOUNT
     #{type_name}* vv = (#{type_name}*) xx;
     #{clean_body}
@@ -133,7 +138,7 @@ cleanup_#{type_name}(ps_v* xx)
   end
 
   def clean_body
-    ""
+    %Q{hard_assert(0, "that's a leak, #{type_name}");}
   end
 
   def clone_proto
