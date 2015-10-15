@@ -3,11 +3,17 @@
 #include "types.h"
 #include "lists.h"
 
+int
+list_empty(ps_v* xs)
+{
+    return xs->type == &PS_NIL_TYPE;
+}
+
 static
 ps_v*
 reverse_list2(ps_v* xs, ps_v* ys)
 {
-    if (xs->type == &PS_NIL_TYPE) {
+    if (list_empty(xs)) {
         return ys;
     }
 
@@ -23,4 +29,5 @@ reverse_list(ps_v* xs)
 {
     return reverse_list2(xs, make_ps_nil());
 }
+
 

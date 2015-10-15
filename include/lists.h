@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+int   list_empty(ps_v* xs);
 ps_v* reverse_list(ps_v* xs);
 
 #endif
