@@ -14,4 +14,8 @@ class IntV < VV
   def show_body
     %Q{ss = pscm_sprintf("%d", vv->num);}
   end
+
+  def clean_body
+    ""
+  end
 end

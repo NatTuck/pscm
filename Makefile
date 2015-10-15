@@ -1,9 +1,9 @@
 
-#GCMODE := 
-#GCLIBS := -lgc
+GCMODE := 
+GCLIBS := -lgc
 
-GCMODE := -DREFCOUNT=1
-GCLIBS := 
+#GCMODE := -DREFCOUNT=1
+#GCLIBS := 
 
 CC := gcc -std=gnu11
 CFLAGS := -g -Wall -I./include $(GCMODE)
@@ -41,4 +41,7 @@ clean:
 	mkdir build
 	touch build/.keep
 
-.PHONY: clean types
+prereqs:
+	sudo apt-get install libbsd-dev libgc-dev
+
+.PHONY: clean types prereqs

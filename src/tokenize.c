@@ -173,6 +173,6 @@ void
 release_token(ps_token* tok)
 {
     release_source(tok->source);
-    free(tok->text);
+    pscm_free(tok->text);
     free(tok);
 }

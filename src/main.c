@@ -7,7 +7,6 @@
 #include "mem.h"
 #include "types.h"
 
-#if 0
 int
 main(int argc, char* argv[])
 {
@@ -31,24 +30,6 @@ main(int argc, char* argv[])
 
         pscm_release(vv);
     }
-
-    return 0;
-}
-#endif
-
-int
-main(int argc, char* argv[])
-{
-    pscm_init_types();
-    
-    ps_v* z = make_ps_nil();
-    ps_v* y = make_ps_cons(make_ps_int(5), z);
-
-    char* text = pscm_show(y);
-    printf("%s\n", text);
-    pscm_free(text);
-
-    pscm_release(y);
 
     return 0;
 }

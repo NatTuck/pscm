@@ -54,8 +54,10 @@ inline static
 void
 pscm_release(ps_v* vv)
 {
+    /*
     fprintf(stderr, "pscm_release(%s)\n", vv->type->name);
     fprintf(stderr, "refcount = %ld\n", vv->refs);
+    */
 
 #ifdef REFCOUNT    
     vv->refs -= 1;
