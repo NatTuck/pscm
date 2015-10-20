@@ -7,7 +7,7 @@ GCLIBS := -lgc
 
 CC := gcc -std=gnu11
 CFLAGS := -g -Wall -I./include $(GCMODE)
-LIBS := -lbsd $(GCLIBS)
+LIBS := -lbsd -lreadline $(GCLIBS)
 
 HDRS := $(wildcard include/*.h)
 SRCS := $(wildcard src/*.c)
