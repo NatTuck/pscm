@@ -21,6 +21,7 @@ main(int argc, char* argv[])
             printf("\n");
             break;
         }
+        add_history(line);
 
         ps_source* code = source_from_string("[test]", line);
         free(line);
