@@ -1,15 +1,15 @@
 
 Here are the basic types:
+    VALUE (Any)
     SYMBOL
     STRING
     INT
     FLOAT
+    CONS
+    NIL
 
-Here are the compound types
-needed so far:
-    CONS (v, v)
-    SOURCE (string, string)
-    TOKEN (source, int, enum, string)
+TODO:
+    BOOL
 
 Standard "methods":
     make_x
@@ -17,3 +17,27 @@ Standard "methods":
     type_name
 
 
+
+annotated function
+
+/* add_int <::> prelude/+ : Int Int -> Int */
+int
+add_int(int x, int y)
+{
+    return x + y;
+}
+
+automatically generated wrapper
+
+sp_v*
+add_int__iii(sp_v* x, sp_v* y)
+{
+    pscm_assert_type(x, INT, "+");
+    pscm_assert_type(y, INT, "+");
+
+    int x_ = pscm_int_cast(x);
+    int y_ = pscm_int_cast(y);
+
+    int rv_ = add_int(x_, y_);
+    return pscm_make_int(rv_);      
+}
