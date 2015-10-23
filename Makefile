@@ -9,26 +9,30 @@ CC := gcc -std=gnu11
 CFLAGS := -g -Wall -I./include $(GCMODE)
 LIBS := -lbsd -lreadline $(GCLIBS)
 
-HDRS := $(wildcard include/*.h)
-SRCS := $(wildcard src/*.c)
-OBJS := $(shell echo "$(SRCS)" | perl -lpe "s/\bsrc/build/g; s/.c\b/.o/g")
+GSRC := src/gen/types.c
+GHDR := include/gen/types.h
 
-build/pscm: $(OBJS) build/gen-types.o
-	$(CC) -o build/pscm $(OBJS) build/gen-types.o $(LIBS)
+HDRS := $(wildcard include/*.h) $(GHDR)
+SRCS := $(wildcard src/*.c) $(GSRC)
+OBJS := $(shell echo "$(SRCS)" | perl -lpe "s/\.c\b/.o/g")
 
-build/%.o: src/%.c build/hdrs
+bin/pscm: $(OBJS)
+	$(CC) -o bin/pscm $(OBJS) $(LIBS)
+
+src/%.o: src/%.c bin/.hdrs
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-build/hdrs: $(HDRS) types Makefile
-	touch build/hdrs
+bin/.hdrs: $(HDRS) types Makefile
+	touch bin/.hdrs
 
-build/gen-types.o: types
-	$(CC) -c -o $@ src/gen/types.c $(CFLAGS)
+$(GSRC) $(GHDR): types
 
 types: $(wildcard scripts/types/*.rb scripts/*.rb)
 	(cd scripts && ruby ./gen-types.rb)
 
 clean:
+	rm -f $(OBJS)
+	#
 	rm -rf include/gen
 	mkdir include/gen
 	touch include/gen/.keep
@@ -37,9 +41,9 @@ clean:
 	mkdir src/gen
 	touch src/gen/.keep
 	#
-	rm -rf build
-	mkdir build
-	touch build/.keep
+	rm -rf bin
+	mkdir bin
+	touch bin/.keep
 
 prereqs:
 	sudo apt-get install libbsd-dev libgc-dev

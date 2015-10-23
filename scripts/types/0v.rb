@@ -32,6 +32,7 @@ class VV
     xs << clean_proto
     xs << clone_proto
     xs << show_proto
+    xs << unwrap_proto if can_unwrap?
     xs << ''
     xs.join("\n")
   end
@@ -42,6 +43,7 @@ class VV
     xs << clean_impl
     xs << clone_impl
     xs << show_impl
+    xs << unwrap_impl if can_unwrap?
     xs << ''
     xs.join("\n")
   end
@@ -187,6 +189,43 @@ show_#{type_name}(ps_v* xx)
   def type_name
     base = self.class.to_s.downcase.sub(/v$/, '')
     "ps_#{base}"
+  end
+
+  def can_unwrap?
+    @attrs.count == 1
+  end
+
+  def unwrap_type
+    tt, _ = @attrs[0].split(/\s+/)
+    tt
+  end
+
+  def unwrap_attr
+    _, aa = @attrs[0].split(/\s+/)
+    aa
+  end
+
+
+  def unwrap_proto
+    %Q{#{unwrap_type} unwrap_#{type_name}(ps_v* vv);}
+  end
+
+  def unwrap_impl
+    <<-"END"
+#{unwrap_type}
+unwrap_#{type_name}(ps_v* vv)
+{
+    hard_assert(vv->type == &#{type_type_name}, "Not a #{type_name}");
+    #{type_name}* vv_ = (#{type_name}*)vv;
+    #{unwrap_type} yy = vv_->#{unwrap_attr};
+    #{unwrap_body}
+    return yy;
+}
+    END
+  end
+
+  def unwrap_body
+    ""
   end
 end
 

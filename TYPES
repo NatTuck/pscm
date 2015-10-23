@@ -32,12 +32,9 @@ automatically generated wrapper
 sp_v*
 add_int__iii(sp_v* x, sp_v* y)
 {
-    pscm_assert_type(x, INT, "+");
-    pscm_assert_type(y, INT, "+");
-
-    int x_ = pscm_int_cast(x);
-    int y_ = pscm_int_cast(y);
-
+    int x_ = unwrap_ps_int(x);
+    int y_ = unwrap_ps_int(y);
     int rv_ = add_int(x_, y_);
     return pscm_make_int(rv_);      
 }
+
