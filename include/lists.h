@@ -5,7 +5,7 @@
 
 int   list_empty(ps_v* xs);
 ps_v* reverse_list(ps_v* xs);
-ps_v* list_ref(ps_v* xs, int64_t ii);
+ps_v* list_ref_c(ps_v* xs, int64_t ii);
 
 ps_v* plist_put(ps_v* xs, ps_v* kk, ps_v* vv);
 ps_v* plist_get(ps_v* xs, ps_v* kk);

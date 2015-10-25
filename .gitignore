@@ -32,7 +32,9 @@
 *.dSYM/
 
 # Build results
-build/*
+bin/*
+src/gen/*
+include/gen/*
 
 # Editor Backups
 .*.swp

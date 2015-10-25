@@ -33,19 +33,19 @@ reverse_list(ps_v* xs)
 }
 
 ps_v*
-list_ref(ps_v* xs, int64_t ii)
+list_ref_c(ps_v* xs, int64_t ii)
 {
     hard_assert(ii >= 0, "negative index for list_ref?");
 
     if (list_empty(xs)) {
-        return make_ps_nil();
+        return 0;
     }
         
     hard_assert(xs->type == &PS_CONS_TYPE, "not a list");
     ps_cons* pair = (ps_cons*)xs;
 
     if (ii == 0) {
-        return pscm_clone(pair->car);
+        return pair->car;
     }
     else {
         return list_ref(pair->cdr, ii - 1);
