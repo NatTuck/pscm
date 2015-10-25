@@ -10,30 +10,32 @@
 #include "types.h"
 
 void
-assert_perror(int cond, const char* text)
+assert_perror_real(int cond, const char* text, const char* file, int line)
 {
     if (cond) {
         return;
     }
 
+    fprintf(stderr, "At %s:%d\n", file, line);
     perror(text);
-    exit(1);
+    abort();
 }
 
 void
-fatal_error(const char* text)
+fatal_error_real(const char* text, const char* file, int line)
 {
+    fprintf(stderr, "At %s:%d\n", file, line);
     fprintf(stderr, "fatal error: %s\n", text);
-    exit(2);
+    abort();
 }
 
 void
-hard_assert(int cond, const char* text)
+hard_assert_real(int cond, const char* text, const char* file, int line)
 {
     if (cond) {
         return;
     }
 
     fprintf(stderr, "failed hard assert\n");
-    fatal_error(text);
+    fatal_error_real(text, file, line);
 }

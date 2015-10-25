@@ -107,14 +107,7 @@ is_#{type_name}(ps_v* vv)
 ps_v*
 make_#{type_name}(#{attrs.join(", ")})
 {
-    //fprintf(stderr, "make #{type_name}\\n");
-
-#ifdef REFCOUNT
-    #{type_name}* vv = calloc(1, sizeof(#{type_name}));
-    vv->refs = 1;
-#else
     #{type_name}* vv = GC_malloc(sizeof(#{type_name}));
-#endif
     vv->type = &#{type_type_name};
     END
 

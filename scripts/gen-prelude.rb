@@ -64,15 +64,17 @@ ps_v*
 initial_env()
 {
     ps_v* env = make_ps_nil();
+    ps_v* nam = 0;
     ps_v* fun = 0;
 END
 
 fs.each do |fun|
-  _, cn, _, _ = fun
+  sn, cn, _, _ = fun
 
   cc.puts <<-"END"
+    nam = make_ps_symbol("#{sn}");
     fun = make_ps_native(#{cn}_wrapper);
-    env = make_ps_cons(fun, env);
+    env = plist_put(env, nam, fun);
   END
 end
 

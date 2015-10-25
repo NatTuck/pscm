@@ -17,6 +17,8 @@ main(int argc, char* argv[])
     pscm_init_types();
     ps_v* env = initial_env();
 
+    printf("%s\n", pscm_show(env));
+
     while(1) {
         char* line = pscm_readline("pscm> ");
         if (line == 0) {

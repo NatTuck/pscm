@@ -8,9 +8,11 @@ class NativeV < VV
   end
 
   def make_body
+    "vv->code = code;"
   end
 
   def show_body
+    %Q{ss = pscm_strdup("[native]");}
   end
 
   def clean_body
