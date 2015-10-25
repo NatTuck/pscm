@@ -18,24 +18,30 @@ class VV
   end
 
   def type_init
-    <<-"END"
+    code = <<-"END"
     #{type_type_name}.name    = "#{type_name}";
-    #{type_type_name}.cleanup = cleanup_#{type_name};
     #{type_type_name}.clone   = clone_#{type_name};
     #{type_type_name}.show    = show_#{type_name};
     #{type_type_name}.equal   = equal_#{type_name};
+    #{type_type_name}.cleanup = 0;
     END
+   
+    if has_cleanup?
+      code += "#{type_type_name}.cleanup = cleanup_#{type_name};\n"
+    end
+
+    code
   end
 
   def protos
     xs = []
     xs << is_proto
     xs << make_proto
-    xs << clean_proto
     xs << clone_proto
     xs << show_proto
     xs << equal_proto
-    xs << unwrap_proto if can_unwrap?
+    xs << clean_proto  if has_cleanup?
+    xs << unwrap_proto if has_unwrap?
     xs << ''
     xs.join("\n")
   end
@@ -44,11 +50,11 @@ class VV
     xs = []
     xs << is_impl
     xs << make_impl
-    xs << clean_impl
     xs << clone_impl
     xs << show_impl
     xs << equal_impl
-    xs << unwrap_impl if can_unwrap?
+    xs << clean_impl  if has_cleanup?
+    xs << unwrap_impl if has_unwrap?
     xs << ''
     xs.join("\n")
   end
@@ -129,36 +135,27 @@ make_#{type_name}(#{attrs.join(", ")})
     ""
   end
 
+  def has_cleanup?
+    false
+  end
+
   def clean_proto
     "void cleanup_#{type_name}(ps_v* vv);"
   end
 
   def clean_impl
-    code = <<-END
+    <<-END
 void
 cleanup_#{type_name}(ps_v* xx)
 {
-    //fprintf(stderr, "cleanup #{type_name}\\n");
-
-#ifdef REFCOUNT
     #{type_name}* vv = (#{type_name}*) xx;
     #{clean_body}
-    END
-
-    @psv_attrs.each do |pv|
-      code += %Q{    pscm_release(vv->#{pv});\n}
-    end
-
-    code += <<-END
-    free(vv);
-#endif
 }
     END
-    code
   end
 
   def clean_body
-    %Q{hard_assert(0, "that's a leak, #{type_name}");}
+    %Q{fatal_error("that's a leak, #{type_name}");}
   end
 
   def clone_proto
@@ -170,10 +167,6 @@ cleanup_#{type_name}(ps_v* xx)
 ps_v*
 clone_#{type_name}(ps_v* vv)
 {
-#ifdef REFCOUNT
-    vv->refs += 1;
-#endif
-    #{clone_body}
     return vv;
 }
     END
@@ -210,10 +203,10 @@ show_#{type_name}(ps_v* xx)
     "ps_#{base}"
   end
 
-  def can_unwrap?
+  def has_unwrap?
     @attrs.count == 1
   end
-
+  
   def unwrap_type
     tt, _ = @attrs[0].split(/\s+/)
     tt

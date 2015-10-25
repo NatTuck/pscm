@@ -1,4 +1,6 @@
 
+#include <stdio.h>
+
 #include "types.h"
 #include "mem.h"
 #include "lists.h"
@@ -33,14 +35,14 @@ eval(ps_v* env, ps_v *code)
         return val;
     }
 
-    return pscm_clone(code);
+    return code;
 }
 
 ps_v*
 map_eval(ps_v* env, ps_v* code)
 {
     if (is_ps_nil(code)) {
-        return pscm_clone(code);
+        return code;
     }
 
     hard_assert(is_ps_cons(code), "should be a list");

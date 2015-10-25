@@ -45,20 +45,17 @@ parse_seq(ps_source* code, token_type term)
                 break;
             case RPAREN_TOK:
                 hard_assert(term == RPAREN_TOK, "unexpected ')'");
-                release_token(tok);
                 goto done;
             default:
                 hard_assert(0, "unknown token");
         }
 
         seq = make_ps_cons(vv, seq);
-        release_token(tok);
     } 
 
     hard_assert(term == NULL_TOK, "missing ')'");
 done:
     rseq = reverse_list(seq);
-    pscm_release(seq);
     return rseq;
 }
 

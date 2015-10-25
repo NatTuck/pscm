@@ -9,7 +9,7 @@ hh.puts <<-END
 #define PSCM_GEN_TYPES_H
 
 #ifndef PSCM_TYPES_H
-#error "nope"
+#error "Don't include gen/types.h directly"
 #endif
 
 #include <stdint.h>
@@ -20,10 +20,7 @@ cc = File.open("../src/gen/types.c", "w")
 cc.puts <<-END
 #include <stdlib.h>
 #include <stdio.h>
-
-#ifndef REFCOUNT
 #include <gc/gc.h>
-#endif
 
 #include "errors.h"
 #include "io.h"

@@ -10,32 +10,19 @@
 ps_source*
 source_from_string(const char* path, const char* text)
 {
-    ps_source* code = calloc(1, sizeof(ps_source));
-    code->refs = 1;
-    code->path = strdup(path);
-    code->text = strdup(text);
+    ps_source* code = GC_malloc_atomic(sizeof(ps_source));
+    code->path = pscm_strdup(path);
+    code->text = pscm_strdup(text);
     return code;
 }
 
 ps_source*
 source_from_path(const char* path)
 {
-    ps_source* code = calloc(1, sizeof(ps_source));
-    code->refs = 1;
-    code->path = strdup(path);
+    ps_source* code = GC_malloc_atomic(sizeof(ps_source));
+    code->path = pscm_strdup(path);
     code->text = read_whole_file(path);
     return code;
-}
-
-void
-release_source(ps_source* code)
-{
-    code->refs -= 1;
-    if (code->refs == 0) {
-        free(code->path);
-        free(code->text);
-        free(code);
-    }
 }
 
 static
@@ -112,7 +99,6 @@ read_string(const char* text)
     }
 
     char* ss = pscm_strdup(tmp);
-    pscm_free(tmp);
     return ss;
 }
 
@@ -129,11 +115,10 @@ next_token(ps_source* code)
         return 0;
     }
 
-    ps_token* tok = (ps_token*) calloc(1, sizeof(ps_token));
+    ps_token* tok = (ps_token*) GC_malloc(sizeof(ps_token));
     tok->type   = BAD_TOK;
     tok->source = code;
     tok->offset = code->pos;
-    code->refs += 1;
 
     if (text[0] == '(') {
         tok->type = LPAREN_TOK;
@@ -168,12 +153,4 @@ next_token(ps_source* code)
 
     code->pos += strlen(tok->text);
     return tok;
-}
-
-void
-release_token(ps_token* tok)
-{
-    release_source(tok->source);
-    pscm_free(tok->text);
-    free(tok);
 }

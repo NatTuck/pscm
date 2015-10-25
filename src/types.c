@@ -30,16 +30,6 @@ to_c_int(ps_v* vv)
 }
 
 int
-pscm_equal(ps_v* x, ps_v* y)
-{
-    if (x->type != y->type) {
-        return 0;
-    }
-
-    return x->type->equal(x, y);
-}
-
-int
 is_ps_list(ps_v* xs)
 {
     return is_ps_cons(xs) || is_ps_nil(xs);

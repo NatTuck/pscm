@@ -13,13 +13,7 @@ class ConsV < VV
       char* aa = pscm_show(vv->car);
       char* bb = pscm_show(vv->cdr);
       ss = pscm_sprintf("(cons %s %s)", aa, bb);
-      pscm_free(bb);
-      pscm_free(aa);
     END
-  end
-
-  def clean_body
-    ""
   end
 
   def equal_body

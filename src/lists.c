@@ -23,7 +23,7 @@ reverse_list2(ps_v* xs, ps_v* ys)
     ps_v*    car  = pair->car;
     ps_v*    cdr  = pair->cdr;
 
-    return reverse_list2(cdr, make_ps_cons(pscm_clone(car), ys));
+    return reverse_list2(cdr, make_ps_cons(car, ys));
 }
 
 ps_v*
@@ -48,7 +48,7 @@ list_ref_c(ps_v* xs, int64_t ii)
         return pair->car;
     }
     else {
-        return list_ref(pair->cdr, ii - 1);
+        return list_ref_c(pair->cdr, ii - 1);
     }
 }
 
@@ -69,11 +69,11 @@ plist_get(ps_v* xs, ps_v* kk)
     hard_assert(xs->type == &PS_CONS_TYPE, "not a list");
    
     ps_cons* pair = (ps_cons*)xs;
-    ps_v* lk = list_ref(pair->car, 0);
-    ps_v* vv = list_ref(pair->car, 1);
+    ps_v* lk = list_ref_c(pair->car, 0);
+    ps_v* vv = list_ref_c(pair->car, 1);
     
     if (pscm_equal(lk, kk)) {
-        return pscm_clone(vv);
+        return vv;
     }
     else {
         return plist_get(pair->cdr, kk);

@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 typedef struct ps_source {
-    int64_t refs;
     char*   path;
     char*   text;
     int64_t pos;
@@ -34,10 +33,8 @@ typedef struct ps_token {
 
 ps_source* source_from_string(const char* path, const char* text);
 ps_source* source_from_path(const char* path);
-void release_source(ps_source*);
 
 ps_token*  next_token(ps_source* code);
-void release_token(ps_token*);
 
 
 #endif

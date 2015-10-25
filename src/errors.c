@@ -7,7 +7,7 @@
 #include <stdarg.h>
 
 #include "mem.h"
-#include "gen/types.h"
+#include "types.h"
 
 void
 assert_perror(int cond, const char* text)

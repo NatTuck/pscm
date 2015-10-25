@@ -6,6 +6,9 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#include <readline/readline.h>
+#include <readline/history.h>
+
 #include "errors.h"
 #include "mem.h"
 
@@ -49,3 +52,21 @@ pscm_sprintf(const char* fmt, ...)
 
     return ss;
 }
+
+char*
+pscm_readline(const char* prompt)
+{
+    char* line = readline(prompt);
+    if (line == 0) {
+        return 0;
+    }
+
+    add_history(line);
+   
+    char* rv = pscm_strdup(line);
+    free(line);
+
+    return rv;
+}
+
+

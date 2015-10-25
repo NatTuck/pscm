@@ -1,13 +1,7 @@
 
-GCMODE := 
-GCLIBS := -lgc
-
-#GCMODE := -DREFCOUNT=1
-#GCLIBS := 
-
 CC := gcc -std=gnu11
-CFLAGS := -g -Wall -I./include $(GCMODE)
-LIBS := -lbsd -lreadline $(GCLIBS)
+CFLAGS := -g -Wall -I./include
+LIBS := -lbsd -lreadline -lgc
 
 GSRC := src/gen/types.c
 GHDR := include/gen/types.h

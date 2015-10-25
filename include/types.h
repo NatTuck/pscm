@@ -17,7 +17,25 @@ typedef struct ps_v* (*native_func)(struct ps_v*);
 
 char*   to_c_str(ps_v* vv);
 int64_t to_c_int(ps_v* vv);
-int     pscm_equal(ps_v* x, ps_v* y);
 int     is_ps_list(ps_v* xs);
+
+inline static
+int
+pscm_equal(ps_v* xx, ps_v* yy)
+{
+    if (xx->type != yy->type) {
+        return 0;
+    } 
+    else {
+        return xx->type->equal(xx, yy);
+    }
+}
+
+inline static
+char*
+pscm_show(ps_v* vv)
+{
+    return vv->type->show(vv);
+}
 
 #endif
