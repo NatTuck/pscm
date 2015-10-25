@@ -13,23 +13,32 @@ cc = File.open("../src/gen/prelude.c", "w")
 hh.puts <<-END
 #ifndef PSCM_GEN_PRELUDE_H
 #define PSCM_GEN_PRELUDE_H
+
+//#ifndef PSCM_STDLIB_H
+//#error "Don't include gen/prelude.h directly"
+//#endif
+
+#include "types.h"
+
 END
 
 cc.puts <<-END
-#include "gen/prelude.h"
-
+#include "types.h"
+#include "lists.h"
+#include "stdlib.h"
+#include "numbers.h"
 END
 
 fs.each do |fun|
   sn, cn, args, rt = fun
 
   hh.puts <<-"END"
-sp_v* #{cn}_wrapper(sp_v* xs);
+ps_v* #{cn}_wrapper(ps_v* xs);
   END
 
   cc.puts <<-"END"
-sp_v*
-#{cn}_wrapper(sp_v* xs)
+ps_v*
+#{cn}_wrapper(ps_v* xs)
 {
   END
 
@@ -50,7 +59,31 @@ sp_v*
   END
 end
 
+cc.puts <<-END
+ps_v*
+initial_env()
+{
+    ps_v* env = make_ps_nil();
+    ps_v* fun = 0;
+END
+
+fs.each do |fun|
+  _, cn, _, _ = fun
+
+  cc.puts <<-"END"
+    fun = make_ps_native(#{cn}_wrapper);
+    env = make_ps_cons(fun, env);
+  END
+end
+
+cc.puts <<-END
+   return env;
+}
+END
+
 hh.puts <<-END
+ps_v* initial_env();
+
 #endif
 END
 

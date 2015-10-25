@@ -3,8 +3,8 @@ CC := gcc -std=gnu11
 CFLAGS := -g -Wall -I./include
 LIBS := -lbsd -lreadline -lgc
 
-GSRC := src/gen/types.c
-GHDR := include/gen/types.h
+GSRC := src/gen/types.c src/gen/prelude.c
+GHDR := include/gen/types.h src/gen/prelude.h
 
 HDRS := $(wildcard include/*.h) $(GHDR)
 SRCS := $(wildcard src/*.c) $(GSRC)
@@ -16,13 +16,14 @@ bin/pscm: $(OBJS)
 src/%.o: src/%.c bin/.hdrs
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-bin/.hdrs: $(HDRS) types Makefile
+bin/.hdrs: $(HDRS) gencode Makefile
 	touch bin/.hdrs
 
-$(GSRC) $(GHDR): types
+$(GSRC) $(GHDR): gencode
 
-types: $(wildcard scripts/types/*.rb scripts/*.rb)
+gencode: $(wildcard scripts/types/*.rb scripts/*.rb)
 	(cd scripts && ruby ./gen-types.rb)
+	(cd scripts && ruby ./gen-prelude.rb)
 
 clean:
 	rm -f $(OBJS)

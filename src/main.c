@@ -8,13 +8,14 @@
 #include "types.h"
 #include "lists.h"
 #include "eval.h"
+#include "builtins.h"
 #include "io.h"
 
 int
 main(int argc, char* argv[])
 {
     pscm_init_types();
-    ps_v* env = make_ps_nil();
+    ps_v* env = initial_env();
 
     while(1) {
         char* line = pscm_readline("pscm> ");
