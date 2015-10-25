@@ -9,4 +9,8 @@ class NilV < VV
   def clean_body
     ""
   end
+
+  def equal_body
+    "return 1;"
+  end
 end

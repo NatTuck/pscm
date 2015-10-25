@@ -23,15 +23,18 @@ class VV
     #{type_type_name}.cleanup = cleanup_#{type_name};
     #{type_type_name}.clone   = clone_#{type_name};
     #{type_type_name}.show    = show_#{type_name};
+    #{type_type_name}.equal   = equal_#{type_name};
     END
   end
 
   def protos
     xs = []
+    xs << is_proto
     xs << make_proto
     xs << clean_proto
     xs << clone_proto
     xs << show_proto
+    xs << equal_proto
     xs << unwrap_proto if can_unwrap?
     xs << ''
     xs.join("\n")
@@ -39,10 +42,12 @@ class VV
 
   def impls
     xs = []
+    xs << is_impl
     xs << make_impl
     xs << clean_impl
     xs << clone_impl
     xs << show_impl
+    xs << equal_impl
     xs << unwrap_impl if can_unwrap?
     xs << ''
     xs.join("\n")
@@ -71,6 +76,20 @@ class VV
       as << "ps_v* #{vv}"
     end
     as
+  end
+
+  def is_proto
+    "int is_#{type_name}(ps_v* vv);"
+  end
+
+  def is_impl
+    <<-"END"
+int
+is_#{type_name}(ps_v* vv)
+{
+    return vv->type == &#{type_type_name};
+}
+    END
   end
 
   def make_proto
@@ -225,6 +244,27 @@ unwrap_#{type_name}(ps_v* vv)
   end
 
   def unwrap_body
+    ""
+  end
+
+  def equal_proto
+    "int equal_#{type_name}(ps_v* xx, ps_v* yy);"
+  end
+
+  def equal_impl
+    <<-"END"
+int
+equal_#{type_name}(ps_v* xx, ps_v* yy)
+{
+    #{type_name}* xx_ = (#{type_name}*) xx;
+    #{type_name}* yy_ = (#{type_name}*) yy;
+    #{equal_body}
+    return xx_ == yy_;
+}
+    END
+  end
+
+  def equal_body
     ""
   end
 end

@@ -1,4 +1,5 @@
 
+#include "errors.h"
 #include "mem.h"
 #include "types.h"
 #include "lists.h"
@@ -17,6 +18,7 @@ reverse_list2(ps_v* xs, ps_v* ys)
         return ys;
     }
 
+    hard_assert(xs->type == &PS_CONS_TYPE, "not a list");
     ps_cons* pair = (ps_cons*) xs;
     ps_v*    car  = pair->car;
     ps_v*    cdr  = pair->cdr;
@@ -30,4 +32,51 @@ reverse_list(ps_v* xs)
     return reverse_list2(xs, make_ps_nil());
 }
 
+ps_v*
+list_ref(ps_v* xs, int64_t ii)
+{
+    hard_assert(ii >= 0, "negative index for list_ref?");
+
+    if (list_empty(xs)) {
+        return make_ps_nil();
+    }
+        
+    hard_assert(xs->type == &PS_CONS_TYPE, "not a list");
+    ps_cons* pair = (ps_cons*)xs;
+
+    if (ii == 0) {
+        return pscm_clone(pair->car);
+    }
+    else {
+        return list_ref(pair->cdr, ii - 1);
+    }
+}
+
+ps_v*
+plist_put(ps_v* xs, ps_v* kk, ps_v* vv)
+{
+    ps_v* ent = make_ps_cons(kk, make_ps_cons(vv, make_ps_nil()));
+    return make_ps_cons(ent, xs);
+}
+
+ps_v*
+plist_get(ps_v* xs, ps_v* kk)
+{
+    if (list_empty(xs)) {
+        return make_ps_nil();
+    }
+
+    hard_assert(xs->type == &PS_CONS_TYPE, "not a list");
+   
+    ps_cons* pair = (ps_cons*)xs;
+    ps_v* lk = list_ref(pair->car, 0);
+    ps_v* vv = list_ref(pair->car, 1);
+    
+    if (pscm_equal(lk, kk)) {
+        return pscm_clone(vv);
+    }
+    else {
+        return plist_get(pair->cdr, kk);
+    }
+}
 

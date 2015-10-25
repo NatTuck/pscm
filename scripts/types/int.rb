@@ -16,6 +16,6 @@ class IntV < VV
   end
 
   def clean_body
-    ""
+    "return xx_->num == yy_->num;"
   end
 end

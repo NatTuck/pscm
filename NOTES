@@ -22,3 +22,17 @@
   functions in case we need finalizers.
 
 
+
+== Runtime Execution ==
+
+To execute a function:
+ - Lookup the function
+ - Allocate a frame
+   - Find params, locals.
+   - Generate name -> position mappings.
+
+
+
+
+
+

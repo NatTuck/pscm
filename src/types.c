@@ -1,12 +1,12 @@
 
 #include "mem.h"
-#include "io.h"
+#include "errors.h"
 #include "types.h"
 
 char*
 to_c_str(ps_v* vv)
 {
-    if (vv->type == &PS_STRING_TYPE) {
+    if (is_ps_string(vv) || is_ps_symbol(vv)) {
         ps_string* ss = (ps_string*) vv;
         return pscm_strdup(ss->text);
     }
@@ -27,4 +27,20 @@ to_c_int(ps_v* vv)
         hard_assert(0, "not an integer");
         return -1;
     }
+}
+
+int
+pscm_equal(ps_v* x, ps_v* y)
+{
+    if (x->type != y->type) {
+        return 0;
+    }
+
+    return x->type->equal(x, y);
+}
+
+int
+is_ps_list(ps_v* xs)
+{
+    return is_ps_cons(xs) || is_ps_nil(xs);
 }

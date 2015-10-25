@@ -6,4 +6,8 @@ class FloatV < VV
     super
     @attrs << "double num"
   end
+
+  def equal_body
+    %Q{fatal_error("float doesn't do equality");}
+  end
 end

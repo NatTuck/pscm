@@ -3,6 +3,7 @@
 #include <ctype.h>
 
 #include "tokenize.h"
+#include "errors.h"
 #include "io.h"
 #include "mem.h"
 

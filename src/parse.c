@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "mem.h"
+#include "errors.h"
 #include "io.h"
 #include "tokenize.h"
 #include "parse.h"

@@ -5,8 +5,12 @@ files = `ls types/*.rb`.split("\n")
 hh = File.open("../include/gen/types.h", "w")
 
 hh.puts <<-END
-#ifndef PSCM_GEN_TYPES_HH
-#define PSCM_GEN_TYPES_HH
+#ifndef PSCM_GEN_TYPES_H
+#define PSCM_GEN_TYPES_H
+
+#ifndef PSCM_TYPES_H
+#error "nope"
+#endif
 
 #include <stdint.h>
 END
@@ -21,6 +25,7 @@ cc.puts <<-END
 #include <gc/gc.h>
 #endif
 
+#include "errors.h"
 #include "io.h"
 #include "types.h"
 #include "mem.h"

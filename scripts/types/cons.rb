@@ -21,4 +21,15 @@ class ConsV < VV
   def clean_body
     ""
   end
+
+  def equal_body
+    <<-"END"
+    int car_eq = pscm_equal(xx_->car, yy_->car);
+    int cdr_eq = pscm_equal(xx_->cdr, yy_->cdr);
+
+    if (car_eq && cdr_eq) {
+        return 1;
+    }
+    END
+  end
 end

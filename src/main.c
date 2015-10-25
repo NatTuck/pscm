@@ -9,11 +9,13 @@
 #include "mem.h"
 #include "types.h"
 #include "lists.h"
+#include "eval.h"
 
 int
 main(int argc, char* argv[])
 {
     pscm_init_types();
+    ps_v* env = make_ps_nil();
 
     while(1) {
         char* line = readline("pscm> ");
@@ -33,15 +35,19 @@ main(int argc, char* argv[])
         while (!list_empty(ii)) {
             ps_cons* cc = (ps_cons*) ii;
 
-            char* text = pscm_show(cc->car);
+            ps_v* rv = eval(env, cc->car);
+            char* text = pscm_show(rv);
             printf("%s\n", text);
             pscm_free(text);
-            
+            pscm_release(rv);
+
             ii = cc->cdr;
         } 
 
         pscm_release(vv);
     }
+
+    pscm_release(env);
 
     return 0;
 }

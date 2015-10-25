@@ -18,4 +18,13 @@ class SymbolV < VV
   def show_body
     "ss = pscm_strdup(vv->text);"
   end
+
+  def equal_body
+    <<-"END"
+    int diff = strcmp(xx_->text, yy_->text);
+    if (diff == 0) {
+        return 1;
+    }
+    END
+  end
 end
