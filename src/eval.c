@@ -23,7 +23,9 @@ is_special_form(ps_v* vv)
 
     char* sym = unwrap_ps_symbol(vv);
 
-    int special = streq("if", sym);
+    int special = 0;
+    special = streq("if", sym);
+    special = streq("lambda", sym);
 
     return special;
 }
@@ -83,8 +85,17 @@ map_eval(ps_v* env, ps_v* code)
 
 ps_v*
 apply(ps_v* env, ps_v* func, ps_v* args) {
-    //ps_func* fn = (ps_func*) func;
-    return make_ps_int(42);
+    ps_func* fn = (ps_func*) func;
+
+    ps_v* new_env = env;
+
+    int nn = list_length(fn->params);
+    for (int ii = 0; ii < nn; ++ii) {
+        ps_v* name  = list_ref_c(fn->params, ii);
+        ps_v* value = eval(env, list_ref_c(args, ii));
+        new_env = plist_put(new_env, name, value);
+    }
+    return eval(new_env, fn->body);
 }
 
 ps_v*
@@ -97,9 +108,14 @@ apply_native(ps_v* env, ps_v* func, ps_v* args)
 ps_v*
 eval_special(ps_v* env, ps_v* name, ps_v* args)
 {
-    char* text = unwrap_ps_symbol(name); 
-    if (streq("if", text)) {
+    char* sym = unwrap_ps_symbol(name); 
+
+    if (streq("if", sym)) {
         return eval_if(env, args);
+    }
+
+    if (streq("lambda", sym)) {
+        return eval_lambda(env, args);
     }
 
     fatal_error("Unknown special form");
@@ -119,3 +135,10 @@ eval_if(ps_v* env, ps_v* args)
     }
 }
 
+ps_v*
+eval_lambda(ps_v* env, ps_v* args)
+{
+    ps_v* params = list_ref_c(args, 0);
+    ps_v* body   = list_ref_c(args, 1);
+    return make_ps_func(params, body, env);
+}

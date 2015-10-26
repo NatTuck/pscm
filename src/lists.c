@@ -10,6 +10,19 @@ list_empty(ps_v* xs)
     return xs->type == &PS_NIL_TYPE;
 }
 
+int
+list_length(ps_v* xs)
+{
+    if (list_empty(xs)) {
+        return 0;
+    }
+    else {
+        hard_assert(xs->type == &PS_CONS_TYPE, "not a list");
+        ps_cons* pair = (ps_cons*) xs;
+        return 1 + list_length(pair->cdr);
+    }
+}
+
 static
 ps_v*
 reverse_list2(ps_v* xs, ps_v* ys)

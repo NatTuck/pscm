@@ -5,13 +5,17 @@ class FuncV < VV
   def initialize
     super
     @psv_attrs << "params"
-    @psv_attrs << "code"
+    @psv_attrs << "body"
+    @psv_attrs << "env"
   end
 
   def make_body
   end
 
   def show_body
+    <<-END
+    ss = pscm_sprintf("(lambda %s %s)", pscm_show(vv->params), pscm_show(vv->body));
+    END
   end
 
   def clean_body
