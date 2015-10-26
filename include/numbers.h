@@ -5,5 +5,6 @@ int64_t int_add(int64_t, int64_t);
 int64_t int_sub(int64_t, int64_t);
 int64_t int_mul(int64_t, int64_t);
 int64_t int_div(int64_t, int64_t);
+int8_t  int_eq (int64_t, int64_t);
 
 #endif

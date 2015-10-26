@@ -5,7 +5,18 @@ fs << ["+", "int_add", ["int", "int"], "int"]
 fs << ["-", "int_sub", ["int", "int"], "int"]
 fs << ["*", "int_mul", ["int", "int"], "int"]
 fs << ["/", "int_div", ["int", "int"], "int"]
+fs << ["=", "int_eq",  ["int", "int"], "bool"]  
 
+def lookup_type(t)
+  case t
+  when "int"
+    "int64_t"
+  when "bool"
+    "int8_t"
+  else
+    t
+  end
+end
 
 hh = File.open("../include/gen/prelude.h", "w")
 cc = File.open("../src/gen/prelude.c", "w")
@@ -48,12 +59,12 @@ ps_v*
     args1 << "x#{ii}"
 
     cc.puts <<-"END"
-      #{aa} x#{ii} = unwrap_ps_#{aa}(list_ref_c(xs, #{ii}));
+      #{lookup_type(aa)} x#{ii} = unwrap_ps_#{aa}(list_ref_c(xs, #{ii}));
     END
   end
 
   cc.puts <<-"END"
-      #{rt} yy = #{cn}(#{args1.join(', ')});
+      #{lookup_type(rt)} yy = #{cn}(#{args1.join(', ')});
       return make_ps_#{rt}(yy);
 }
   END

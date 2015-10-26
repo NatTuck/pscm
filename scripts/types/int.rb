@@ -15,7 +15,7 @@ class IntV < VV
     %Q{ss = pscm_sprintf("%d", vv->num);}
   end
 
-  def clean_body
+  def equal_body
     "return xx_->num == yy_->num;"
   end
 end

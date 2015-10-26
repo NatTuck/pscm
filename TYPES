@@ -7,40 +7,15 @@ Here are the basic types:
     FLOAT
     CONS
     NIL
+    NATIVE
+    BOOL
 
 TODO:
-    BOOL
+    FUNC
 
 Standard "methods":
     make_x
-    cleanup
     type_name
-
-
-
-annotated function
-
-/* @import(add_int, prelude/+) */
-int
-add_int(int x, int y)
-{
-    return x + y;
-}
-
-automatically generated wrapper
-
-sp_v*
-add_int__iii(sp_v* args)
-{
-    ps_v* x = list_ref(args, 0);
-    ps_v* y = list_ref(args, 1);
-    int x_ = unwrap_ps_int(x);
-    int y_ = unwrap_ps_int(y);
-    int rv_ = add_int(x_, y_);
-    return pscm_make_int(rv_);      
-}
-
-Rules for wrappers:
- - Read-only access to arguments.
- - Produce a new value with (refs = 1).
+    show
+    equal
 

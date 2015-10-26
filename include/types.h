@@ -15,8 +15,6 @@ typedef struct ps_v* (*native_func)(struct ps_v*);
 
 #include "gen/types.h"
 
-char*   to_c_str(ps_v* vv);
-int64_t to_c_int(ps_v* vv);
 int     is_ps_list(ps_v* xs);
 
 inline static
